@@ -1,39 +1,54 @@
+import logging
 from openai import OpenAI
-import httpx as httpx
+from credentials import ChatGPT_TOKEN
+
+logger = logging.getLogger(__name__)
+
+client = OpenAI(api_key=ChatGPT_TOKEN)
 
 
-class ChatGptService:
-    client: OpenAI = None
-    message_list: list = None
+def ask_gpt(prompt: str, message: str) -> str:
+    """
+    Синхронна функція: надсилає запит до OpenAI і повертає текст відповіді.
+    Викликається з bot.py через run_in_executor для асинхронної роботи.
 
-    def __init__(self, token):
-        token = "sk-proj-" + token[:3:-1] if token.startswith('gpt:') else token
-        self.client = OpenAI(
-            http_client=httpx.Client(proxy="http://18.199.183.77:49232"),
-            api_key=token)
-        self.message_list = []
+    Args:
+        prompt: Системний промпт (роль асистента)
+        message: Повідомлення користувача
 
-    async def send_message_list(self) -> str:
-        completion = self.client.chat.completions.create(
-            model="gpt-3.5-turbo",  # gpt-4o,  gpt-4-turbo,    gpt-3.5-turbo,  GPT-4o mini
-            messages=self.message_list,
-            max_tokens=3000,
-            temperature=0.9
+    Returns:
+        Відповідь від ChatGPT
+    """
+    try:
+        logger.info(f"Запит до GPT (перші 50 символів): {message[:50]}...")
+
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": message},
+            ],
+            temperature=0.8,
         )
-        message = completion.choices[0].message
-        self.message_list.append(message)
-        return message.content
 
-    def set_prompt(self, prompt_text: str) -> None:
-        self.message_list.clear()
-        self.message_list.append({"role": "system", "content": prompt_text})
+        answer = response.choices[0].message.content.strip()
+        logger.info(f"✅ Отримано відповідь від GPT ({len(answer)} символів)")
 
-    async def add_message(self, message_text: str) -> str:
-        self.message_list.append({"role": "user", "content": message_text})
-        return await self.send_message_list()
+        return answer
 
-    async def send_question(self, prompt_text: str, message_text: str) -> str:
-        self.message_list.clear()
-        self.message_list.append({"role": "system", "content": prompt_text})
-        self.message_list.append({"role": "user", "content": message_text})
-        return await self.send_message_list()
+    except Exception as e:
+        logger.error(f"❌ Помилка GPT: {e}")
+        return f"⚠️ Помилка при зверненні до ChatGPT: {e}"
+
+
+if __name__ == "__main__":
+    # Тестовий запуск
+    print("=== ТЕСТ GPT MODULE ===\n")
+
+    prompt = "Ти експерт з цікавих фактів. Розкажи короткий факт українською."
+    message = "Розкажи факт про космос"
+
+    print(f"Промпт: {prompt}")
+    print(f"Запит: {message}\n")
+    print("Відповідь GPT:")
+    print(ask_gpt(prompt, message))
