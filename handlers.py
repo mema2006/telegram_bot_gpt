@@ -295,7 +295,7 @@ class TalkHandler(BaseHandler):
             ],
             [
                 InlineKeyboardButton(
-                    "🏠 Закінчити", callback_data="finish"
+                    "🏠 Закінчити", callback_data="start"
                 )
             ],
         ]
@@ -423,7 +423,7 @@ class QuizHandler(BaseHandler):
             ],
             [
                 InlineKeyboardButton(
-                    "🏠 Закінчити", callback_data="finish"
+                    "🏠 Закінчити", callback_data="start"
                 )
             ],
         ]
@@ -578,7 +578,7 @@ class QuizHandler(BaseHandler):
             ],
             [
                 InlineKeyboardButton(
-                    "🏠 Закінчити", callback_data="finish"
+                    "🏠 Закінчити", callback_data="start"
                 )
             ],
         ]
@@ -717,7 +717,7 @@ class TranslateHandler(BaseHandler):
             ],
             [
                 InlineKeyboardButton(
-                    "🏠 Закінчити", callback_data="finish"
+                    "🏠 Закінчити", callback_data="start"
                 )
             ],
         ]
@@ -746,7 +746,7 @@ class TranslateHandler(BaseHandler):
 
         keyboard = [
             [InlineKeyboardButton("🔄 Змінити мову", callback_data="translate")],
-            [InlineKeyboardButton("🏠 Закінчити", callback_data="finish")],
+            [InlineKeyboardButton("🏠 Закінчити", callback_data="start")],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await query.message.reply_text(
@@ -784,7 +784,7 @@ class TranslateHandler(BaseHandler):
             ],
             [
                 InlineKeyboardButton(
-                    "🏠 Закінчити", callback_data="finish"
+                    "🏠 Закінчити", callback_data="start"
                 )
             ],
         ]
@@ -851,7 +851,7 @@ class RecommendationsHandler(BaseHandler):
             ],
             [
                 InlineKeyboardButton(
-                    "🏠 Закінчити", callback_data="finish"
+                    "🏠 Закінчити", callback_data="start"
                 )
             ],
         ]
@@ -906,7 +906,7 @@ class RecommendationsHandler(BaseHandler):
         keyboard.append(
             [
                 InlineKeyboardButton(
-                    "🏠 Закінчити", callback_data="finish"
+                    "🏠 Закінчити", callback_data="start"
                 )
             ]
         )
@@ -996,7 +996,7 @@ class RecommendationsHandler(BaseHandler):
             ],
             [
                 InlineKeyboardButton(
-                    "🏠 Закінчити", callback_data="finish"
+                    "🏠 Закінчити", callback_data="start"
                 )
             ],
         ]
