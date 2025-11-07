@@ -1,11 +1,23 @@
 """Модуль для роботи з OpenAI API."""
 import logging
+import httpx
 from openai import OpenAI
 from credentials import ChatGPT_TOKEN
 
 logger = logging.getLogger(__name__)
 
-client = OpenAI(api_key=ChatGPT_TOKEN)
+# Опціональний проксі сервер (якщо потрібно)
+try:
+    from credentials import PROXY_URL
+    http_client = httpx.Client(proxy="http://18.199.183.77:49232") if PROXY_URL else None
+except ImportError:
+    http_client = None
+
+# Ініціалізація клієнта OpenAI з проксі (якщо вказано)
+client = OpenAI(
+    api_key=ChatGPT_TOKEN,
+    http_client=http_client
+)
 
 
 def ask_gpt(prompt: str, message: str, history: list = None) -> str:
